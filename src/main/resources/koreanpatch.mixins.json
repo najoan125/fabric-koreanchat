@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.hyfata.najoan.koreanpatch.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+    "BookEditScreenMixin",
+    "CreativeInventoryScreenInvoker",
+    "SelectionManagerMixin",
+    "SignEditScreenMixin",
+    "TextFieldWidgetMixin",
+    "ChatScreenMixin",
+    "CreativeInventoryScreenMixin",
+    "CommandBlockScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
