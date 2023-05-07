@@ -5,9 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.BookEditScreen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
-import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -38,7 +36,7 @@ public abstract class BookEditScreenMixin extends Screen {
         }
     }
 
-    @Inject(at={@At(value="HEAD")}, method={"keyPressed(III)Z"}, cancellable=true)
+    @Inject(at={@At(value="HEAD")}, method={"keyPressed(III)Z"})
     private void init(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> callbackInfo) {
         if (this.client.currentScreen != null && (keyCode == KoreanPatchClient.KEYCODE || scanCode == KoreanPatchClient.SCANCODE)) {
             KoreanPatchClient.KOREAN = !KoreanPatchClient.KOREAN;

@@ -36,7 +36,7 @@ public abstract class SignEditScreenMixin extends Screen {
         }
     }
 
-    @Inject(at={@At(value="HEAD")}, method={"keyPressed(III)Z"}, cancellable=true)
+    @Inject(at={@At(value="HEAD")}, method={"keyPressed(III)Z"})
     public void init(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> callbackInfo) {
         if (this.client.currentScreen != null && (keyCode == KoreanPatchClient.KEYCODE || scanCode == KoreanPatchClient.SCANCODE)) {
             KoreanPatchClient.KOREAN = !KoreanPatchClient.KOREAN;

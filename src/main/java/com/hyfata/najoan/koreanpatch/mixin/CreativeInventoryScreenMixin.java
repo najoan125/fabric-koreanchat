@@ -12,9 +12,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.awt.geom.AffineTransform;
 
 @Mixin(value= CreativeInventoryScreen.class)
 public class CreativeInventoryScreenMixin extends Screen {
@@ -43,11 +40,6 @@ public class CreativeInventoryScreenMixin extends Screen {
 
     @Inject(at = {@At(value="HEAD")}, method = {"setSelectedTab"})
     private void check(ItemGroup group, CallbackInfo callbackInfo){
-        if(group == ItemGroups.SEARCH){
-            KoreanPatchClient.SEARCH = true;
-        }
-        else{
-            KoreanPatchClient.SEARCH = false;
-        }
+        KoreanPatchClient.SEARCH = group == ItemGroups.SEARCH;
     }
 }

@@ -6,14 +6,21 @@
   "mixins": [
   ],
   "client": [
+    "AddServerScreenMixin",
+    "AnvilScreenMixin",
     "BookEditScreenMixin",
-    "CreativeInventoryScreenInvoker",
-    "SelectionManagerMixin",
-    "SignEditScreenMixin",
-    "TextFieldWidgetMixin",
     "ChatScreenMixin",
+    "CommandBlockScreenMixin",
+    "CreateWorldScreenMixin",
+    "CreativeInventoryScreenInvoker",
     "CreativeInventoryScreenMixin",
-    "CommandBlockScreenMixin"
+    "DirectConnectScreenMixin",
+    "EditWorldScreenMixin",
+    "SelectionManagerMixin",
+    "SelectWorldScreenMixin",
+    "SignEditScreenMixin",
+    "TabNavigationWidgetMixin",
+    "TextFieldWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1
