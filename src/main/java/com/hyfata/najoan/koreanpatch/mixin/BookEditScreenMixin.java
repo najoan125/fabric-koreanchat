@@ -2,9 +2,9 @@ package com.hyfata.najoan.koreanpatch.mixin;
 
 import com.hyfata.najoan.koreanpatch.client.KoreanPatchClient;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.BookEditScreen;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,16 +23,16 @@ public abstract class BookEditScreenMixin extends Screen {
     }
 
     @Inject(at = {@At(value="RETURN")}, method = {"render"})
-    private void addCustomLabel(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci){
+    private void addCustomLabel(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci){
         if (KoreanPatchClient.KOREAN) {
-            fill(matrices, (this.width - 192) / 2 + 10 - 6, 30 - 2, (this.width - 192) / 2 + 10 + 6, 30 + 10, -65536);
-            fill(matrices, (this.width - 192) / 2 + 10 - 5, 30 - 1, (this.width - 192) / 2 + 10 + 5, 30 + 9, this.client.options.getTextBackgroundColor(-587202560));
-            drawCenteredTextWithShadow(matrices, this.client.textRenderer, KOREAN, (this.width - 192) / 2 + 10, 30, 16777215);
+            context.fill((this.width - 192) / 2 + 10 - 6, 30 - 2, (this.width - 192) / 2 + 10 + 6, 30 + 10, -65536);
+            context.fill((this.width - 192) / 2 + 10 - 5, 30 - 1, (this.width - 192) / 2 + 10 + 5, 30 + 9, this.client.options.getTextBackgroundColor(-587202560));
+            context.drawCenteredTextWithShadow(this.client.textRenderer, KOREAN, (this.width - 192) / 2 + 10, 30, 16777215);
         }
         else{
-            fill(matrices, (this.width - 192) / 2 + 10 - 6, 30 - 2, (this.width - 192) / 2 + 10 + 6, 30 + 10, -16711936);
-            fill(matrices, (this.width - 192) / 2 + 10 - 5, 30 - 1, (this.width - 192) / 2 + 10 + 5, 30 + 9, this.client.options.getTextBackgroundColor(-587202560));
-            drawCenteredTextWithShadow(matrices, this.client.textRenderer, ENGLISH, (this.width - 192) / 2 + 10, 30, 16777215);
+            context.fill((this.width - 192) / 2 + 10 - 6, 30 - 2, (this.width - 192) / 2 + 10 + 6, 30 + 10, -16711936);
+            context.fill((this.width - 192) / 2 + 10 - 5, 30 - 1, (this.width - 192) / 2 + 10 + 5, 30 + 9, this.client.options.getTextBackgroundColor(-587202560));
+            context.drawCenteredTextWithShadow(this.client.textRenderer, ENGLISH, (this.width - 192) / 2 + 10, 30, 16777215);
         }
     }
 
