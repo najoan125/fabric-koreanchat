@@ -26,11 +26,11 @@ public abstract class ChatScreenMixin extends Screen {
         if (KoreanPatchClient.KOREAN) {
             context.fill(2, this.height - 42 + 3, 14, this.height - 30 + 3, -65536);
             context.fill(3, this.height - 41 + 3, 13, this.height - 31 + 3, this.client.options.getTextBackgroundColor(-587202560));
-            context.drawCenteredTextWithShadow(this.client.textRenderer, KOREAN, 8, this.height - 40 + 3, 16777215);
+            context.drawText(textRenderer, KOREAN, 8 - textRenderer.getWidth(KOREAN.asOrderedText()) / 2, this.height - 40 + 3, 16777215, false);
         } else {
             context.fill(2, this.height - 42 + 3, 14, this.height - 30 + 3, -16711936);
             context.fill(3, this.height - 41 + 3, 13, this.height - 31 + 3, this.client.options.getTextBackgroundColor(-587202560));
-            context.drawCenteredTextWithShadow(this.client.textRenderer, ENGLISH, 8, this.height - 40 + 3, 16777215);
+            context.drawText(textRenderer, ENGLISH, 8 - textRenderer.getWidth(ENGLISH.asOrderedText()) / 2, this.height - 40 + 3, 16777215, false);
         }
     }
 }
