@@ -120,7 +120,6 @@ public abstract class TextFieldWidgetMixin {
     }
 
     boolean onHangulCharTyped(int keyCode, int modifiers) {
-        System.out.println(modifiers);
         boolean shift = (modifiers & 0x01) == 1;
 
         int codePoint = keyCode;

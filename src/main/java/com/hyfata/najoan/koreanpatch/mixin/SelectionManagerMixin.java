@@ -127,6 +127,61 @@ public abstract class SelectionManagerMixin {
         }
     }
 
+    @Inject(at={@At(value = "HEAD")}, method = {"delete(I)V"}, cancellable=true)
+    public void delete(int offset, CallbackInfo ci) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.currentScreen != null) {
+            if (onBackspaceKeyPressed()) {
+                ci.cancel();
+            }
+        }
+    }
+
+
+    boolean onBackspaceKeyPressed() {
+        int cursorPosition = this.selectionEnd;
+        if (cursorPosition == 0 || cursorPosition != KeyboardLayout.INSTANCE.assemblePosition) return false;
+
+        String text = this.getText();
+
+        char ch = text.toCharArray()[cursorPosition - 1];
+
+        if (HangulProcessor.isHangulSyllables(ch)) {
+            int code = ch - 0xAC00;
+            int cho = code / (21 * 28);
+            int jung = (code % (21 * 28)) / 28;
+            int jong = (code % (21 * 28)) % 28;
+
+            if (jong != 0) {
+                char[] ch_arr = KeyboardLayout.INSTANCE.jongsung_ref_table.get(jong).toCharArray();
+                if (ch_arr.length == 2) {
+                    jong = KeyboardLayout.INSTANCE.jongsung_table.indexOf(ch_arr[0]);
+                } else {
+                    jong = 0;
+                }
+                char c = HangulProcessor.synthesizeHangulCharacter(cho, jung, jong);
+                this.modifyText(c);
+                return true;
+            } else {
+                char[] ch_arr = KeyboardLayout.INSTANCE.jungsung_ref_table.get(jung).toCharArray();
+                if (ch_arr.length == 2) {
+                    jung = KeyboardLayout.INSTANCE.jungsung_table.indexOf(ch_arr[0]);
+                    char c = HangulProcessor.synthesizeHangulCharacter(cho, jung, 0);
+                    this.modifyText(c);
+                    return true;
+                } else {
+                    char c = KeyboardLayout.INSTANCE.chosung_table.charAt(cho);
+                    this.modifyText(c);
+                    return true;
+                }
+            }
+        } else if (HangulProcessor.isHangulCharacter(ch)) {
+            KeyboardLayout.INSTANCE.assemblePosition = -1;
+            return false;
+        }
+        return false;
+    }
+
     private int getModifiers() {
         boolean shift = InputUtil.isKeyPressed(client.getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) ||
                 InputUtil.isKeyPressed(client.getWindow().getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT);
