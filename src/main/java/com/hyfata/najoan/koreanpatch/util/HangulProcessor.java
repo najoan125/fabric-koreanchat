@@ -5,11 +5,11 @@ import com.google.common.base.Splitter;
 import java.util.List;
 
 public class HangulProcessor {
-    static String chosungTable = "\u3131\u3132\u3134\u3137\u3138\u3139\u3141\u3142\u3143\u3145\u3146\u3147\u3148\u3149\u314a\u314b\u314c\u314d\u314e";
-    static String jungsungTable = "\u314f\u3150\u3151\u3152\u3153\u3154\u3155\u3156\u3157\u3158\u3159\u315a\u315b\u315c\u315d\u315e\u315f\u3160\u3161\u3162\u3163";
-    static String jongsungTable = "\u0000\u3131\u3132\u3133\u3134\u3135\u3136\u3137\u3139\u313a\u313b\u313c\u313d\u313e\u313f\u3140\u3141\u3142\u3144\u3145\u3146\u3147\u3148\u314a\u314b\u314c\u314d\u314e";
-    static List<String> jungsungCombiTable = Splitter.on((String)",").splitToList((CharSequence)",,,,,,,,,\u3157\u314f,\u3157\u3150,\u3157\u3163,,,\u315c\u3153,\u315c\u3154,\u315c\u3163,,,\u3161\u3163,\u3163");
-    static List<String> jongsungCombiTable = Splitter.on((String)",").splitToList((CharSequence)",,,\u3131\u3145,,\u3134\u3148,\u3134\u314e,,,\u3139\u3131,\u3139\u3141,\u3139\u3142,\u3139\u3145,\u3139\u314c,\u3139\u314d,\u3139\u314e,,,\u3142\u3145,,,,,,,,,");
+    static String chosungTable = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";
+    static String jungsungTable = "ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ";
+    static String jongsungTable = "\u0000ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ";
+    static List<String> jungsungCombiTable = Splitter.on(",").splitToList(",,,,,,,,,ㅗㅏ,ㅗㅐ,ㅗㅣ,,,ㅜㅓ,ㅜㅔ,ㅜㅣ,,,ㅡㅣ,ㅣ");
+    static List<String> jongsungCombiTable = Splitter.on(",").splitToList(",,,ㄱㅅ,,ㄴㅈ,ㄴㅎ,,,ㄹㄱ,ㄹㅁ,ㄹㅂ,ㄹㅅ,ㄹㅌ,ㄹㅍ,ㄹㅎ,,,ㅂㅅ,,,,,,,,,");
 
     public static boolean isJaeum(char c) {
         return c >= 0x3131 && c <= 0x314E;
@@ -84,6 +84,6 @@ public class HangulProcessor {
     }
 
     public static char synthesizeHangulCharacter(int cho, int jung, int jong) {
-        return (char)(44032 + cho * 28 * 21 + jung * 28 + jong);
+        return (char)('가' + cho * 28 * 21 + jung * 28 + jong);
     }
 }

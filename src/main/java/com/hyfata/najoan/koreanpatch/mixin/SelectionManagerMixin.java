@@ -7,9 +7,12 @@ import java.util.function.Supplier;
 
 import com.hyfata.najoan.koreanpatch.client.KoreanPatchClient;
 import com.hyfata.najoan.koreanpatch.keyboard.KeyboardLayout;
+import com.hyfata.najoan.koreanpatch.keyboard.QwertyLayout;
 import com.hyfata.najoan.koreanpatch.util.HangulProcessor;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.SelectionManager;
+import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -44,16 +47,36 @@ public abstract class SelectionManagerMixin {
                 KeyboardLayout.INSTANCE.assemblePosition = HangulProcessor.isHangulCharacter(chr) ? this.selectionEnd : -1;
                 return;
             }
-            int qwertyIndex = this.getQwertyIndexCodePoint(chr);
+            int qwertyIndex = KeyboardLayout.INSTANCE.getQwertyIndexCodePoint(chr);
             if (qwertyIndex == -1) {
                 KeyboardLayout.INSTANCE.assemblePosition = -1;
                 return;
             }
             Objects.requireNonNull(KeyboardLayout.INSTANCE);
-            char curr = "`1234567890-=~!@#$%^&*()_+\u3142\u3148\u3137\u3131\u3145\u315b\u3155\u3151\u3150\u3154[]\\\u3143\u3149\u3138\u3132\u3146\u315b\u3155\u3151\u3152\u3156{}|\u3141\u3134\u3147\u3139\u314e\u3157\u3153\u314f\u3163;'\u3141\u3134\u3147\u3139\u314e\u3157\u3153\u314f\u3163:\"\u314b\u314c\u314a\u314d\u3160\u315c\u3161,./\u314b\u314c\u314a\u314d\u3160\u315c\u3161<>?".toCharArray()[qwertyIndex];
+            char curr = KeyboardLayout.INSTANCE.layout.toCharArray()[qwertyIndex];
             int cursorPosition = this.selectionEnd;
-            int modifiers = this.getChosungModifiersIndexCodePoint(curr);
+            int modifiers = this.getModifiers();
             if (cursorPosition == 0 || !HangulProcessor.isHangulCharacter(curr) || !this.onHangulCharTyped(chr, modifiers)) {
+                //Caps Lock/한글 상태면 쌍자음으로 입력되는 문제 수정
+                if (HangulProcessor.isHangulCharacter(curr)) {
+                    boolean shift = (modifiers & 0x01) == 1;
+                    int codePoint = chr;
+
+                    if (codePoint >= 65 && codePoint <= 90) {
+                        codePoint += 32;
+                    }
+
+                    if (codePoint >= 97 && codePoint <= 122) {
+                        if (shift) {
+                            codePoint -= 32;
+                        }
+                    }
+                    int idx = QwertyLayout.getInstance().getLayoutString().indexOf(codePoint);
+                    if (idx != -1) {
+                        curr = KeyboardLayout.INSTANCE.layout.toCharArray()[idx];
+                    }
+                } //모두 소문자로 돌린 다음 shift modifier에 따라서 적절하게 처리
+
                 this.writeText(String.valueOf(curr));
                 KeyboardLayout.INSTANCE.assemblePosition = HangulProcessor.isHangulCharacter(curr) ? this.selectionEnd : -1;
             }
@@ -62,8 +85,7 @@ public abstract class SelectionManagerMixin {
 
     @Inject(at={@At(value="HEAD")}, method={"insert(Ljava/lang/String;)V"}, cancellable=true)
     public void insertString(String string, CallbackInfo ci) {
-        char[] chrs;
-        for (char chr : chrs = string.toCharArray()) {
+        for (char chr : string.toCharArray()) {
             if (this.client.currentScreen == null || !KoreanPatchClient.KOREAN) continue;
             ci.cancel();
             if (chr == ' ') {
@@ -71,30 +93,44 @@ public abstract class SelectionManagerMixin {
                 KeyboardLayout.INSTANCE.assemblePosition = HangulProcessor.isHangulCharacter(chr) ? this.selectionEnd : -1;
                 continue;
             }
-            int qwertyIndex = this.getQwertyIndexCodePoint(chr);
+            int qwertyIndex = KeyboardLayout.INSTANCE.getQwertyIndexCodePoint(chr);
             if (qwertyIndex == -1) {
                 KeyboardLayout.INSTANCE.assemblePosition = -1;
                 continue;
             }
             Objects.requireNonNull(KeyboardLayout.INSTANCE);
-            char curr = "`1234567890-=~!@#$%^&*()_+\u3142\u3148\u3137\u3131\u3145\u315b\u3155\u3151\u3150\u3154[]\\\u3143\u3149\u3138\u3132\u3146\u315b\u3155\u3151\u3152\u3156{}|\u3141\u3134\u3147\u3139\u314e\u3157\u3153\u314f\u3163;'\u3141\u3134\u3147\u3139\u314e\u3157\u3153\u314f\u3163:\"\u314b\u314c\u314a\u314d\u3160\u315c\u3161,./\u314b\u314c\u314a\u314d\u3160\u315c\u3161<>?".toCharArray()[qwertyIndex];
+            char curr = KeyboardLayout.INSTANCE.layout.toCharArray()[qwertyIndex];
             int cursorPosition = this.selectionEnd;
-            int modifiers = this.getChosungModifiersIndexCodePoint(curr);
+            int modifiers = this.getModifiers();
             if (cursorPosition != 0 && HangulProcessor.isHangulCharacter(curr) && this.onHangulCharTyped(chr, modifiers)) continue;
+            //Caps Lock/한글 상태면 쌍자음으로 입력되는 문제 수정
+            if (HangulProcessor.isHangulCharacter(curr)) {
+                boolean shift = (modifiers & 0x01) == 1;
+                int codePoint = chr;
+
+                if (codePoint >= 65 && codePoint <= 90) {
+                    codePoint += 32;
+                }
+
+                if (codePoint >= 97 && codePoint <= 122) {
+                    if (shift) {
+                        codePoint -= 32;
+                    }
+                }
+                int idx = QwertyLayout.getInstance().getLayoutString().indexOf(codePoint);
+                if (idx != -1) {
+                    curr = KeyboardLayout.INSTANCE.layout.toCharArray()[idx];
+                }
+            } //모두 소문자로 돌린 다음 shift modifier에 따라서 적절하게 처리
             this.writeText(String.valueOf(curr));
             KeyboardLayout.INSTANCE.assemblePosition = HangulProcessor.isHangulCharacter(curr) ? this.selectionEnd : -1;
         }
     }
 
-    private int getQwertyIndexCodePoint(char ch) {
-        Objects.requireNonNull(KeyboardLayout.INSTANCE);
-        return "`1234567890-=~!@#$%^&*()_+qwertyuiop[]\\QWERTYUIOP{}|asdfghjkl;'ASDFGHJKL:\"zxcvbnm,./ZXCVBNM<>?".indexOf(ch);
-    }
-
-    private int getChosungModifiersIndexCodePoint(char curr) {
-        Objects.requireNonNull(KeyboardLayout.INSTANCE);
-        int idx = "\u3132\u3138\u3143\u3146\u3149".indexOf(curr);
-        if (idx > -1) {
+    private int getModifiers() {
+        boolean shift = InputUtil.isKeyPressed(client.getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) ||
+                InputUtil.isKeyPressed(client.getWindow().getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT);
+        if (shift) {
             return 1;
         }
         return 0;
@@ -133,47 +169,58 @@ public abstract class SelectionManagerMixin {
     }
 
     boolean onHangulCharTyped(int keyCode, int modifiers) {
-        boolean shift = (modifiers & 1) == 1;
+        boolean shift = (modifiers & 0x01) == 1;
+
         int codePoint = keyCode;
+
         if (codePoint >= 65 && codePoint <= 90) {
             codePoint += 32;
         }
-        if (codePoint >= 97 && codePoint <= 122 && shift) {
-            codePoint -= 32;
+
+        if (codePoint >= 97 && codePoint <= 122) {
+            if (shift) {
+                codePoint -= 32;
+            }
         }
-        Objects.requireNonNull(KeyboardLayout.INSTANCE);
-        int idx = "`1234567890-=~!@#$%^&*()_+qwertyuiop[]\\QWERTYUIOP{}|asdfghjkl;'ASDFGHJKL:\"zxcvbnm,./ZXCVBNM<>?".indexOf(codePoint);
+
+        int idx = QwertyLayout.getInstance().getLayoutString().indexOf(codePoint);
+        // System.out.println(String.format("idx: %d", idx));
         if (idx == -1) {
             KeyboardLayout.INSTANCE.assemblePosition = -1;
             return false;
         }
+
         int cursorPosition = this.selectionEnd;
         String text = this.getText();
+
         char prev = text.toCharArray()[cursorPosition - 1];
-        Objects.requireNonNull(KeyboardLayout.INSTANCE);
-        char curr = "`1234567890-=~!@#$%^&*()_+\u3142\u3148\u3137\u3131\u3145\u315b\u3155\u3151\u3150\u3154[]\\\u3143\u3149\u3138\u3132\u3146\u315b\u3155\u3151\u3152\u3156{}|\u3141\u3134\u3147\u3139\u314e\u3157\u3153\u314f\u3163;'\u3141\u3134\u3147\u3139\u314e\u3157\u3153\u314f\u3163:\"\u314b\u314c\u314a\u314d\u3160\u315c\u3161,./\u314b\u314c\u314a\u314d\u3160\u315c\u3161<>?".toCharArray()[idx];
+        char curr = KeyboardLayout.INSTANCE.layout.toCharArray()[idx];
+
         if (cursorPosition == 0) {
-            if (!HangulProcessor.isHangulCharacter(curr)) {
-                return false;
-            }
+            if (!HangulProcessor.isHangulCharacter(curr)) return false;
+
             this.writeText(String.valueOf(curr));
             KeyboardLayout.INSTANCE.assemblePosition = this.selectionEnd;
-        } else if (cursorPosition == KeyboardLayout.INSTANCE.assemblePosition) {
+        }
+        else if (cursorPosition == KeyboardLayout.INSTANCE.assemblePosition) {
+
+            // 자음 + 모음
             if (HangulProcessor.isJaeum(prev) && HangulProcessor.isMoeum(curr)) {
-                Objects.requireNonNull(KeyboardLayout.INSTANCE);
-                int cho = "\u3131\u3132\u3134\u3137\u3138\u3139\u3141\u3142\u3143\u3145\u3146\u3147\u3148\u3149\u314a\u314b\u314c\u314d\u314e".indexOf(prev);
-                Objects.requireNonNull(KeyboardLayout.INSTANCE);
-                int jung = "\u314f\u3150\u3151\u3152\u3153\u3154\u3155\u3156\u3157\u3158\u3159\u315a\u315b\u315c\u315d\u315e\u315f\u3160\u3161\u3162\u3163".indexOf(curr);
+                int cho = KeyboardLayout.INSTANCE.chosung_table.indexOf(prev);
+                int jung = KeyboardLayout.INSTANCE.jungsung_table.indexOf(curr);
                 char c = HangulProcessor.synthesizeHangulCharacter(cho, jung, 0);
                 this.modifyText(c);
                 KeyboardLayout.INSTANCE.assemblePosition = this.selectionEnd;
                 return true;
             }
+
             if (HangulProcessor.isHangulSyllables(prev)) {
-                int code = prev - 44032;
-                int cho = code / 588;
-                int jung = code % 588 / 28;
-                int jong = code % 588 % 28;
+                int code = prev - 0xAC00;
+                int cho = code / (21 * 28);
+                int jung = (code % (21 * 28)) / 28;
+                int jong = (code % (21 * 28)) % 28;
+
+                // 중성 합성 (ㅘ, ㅙ)..
                 if (jong == 0 && HangulProcessor.isJungsung(prev, curr)) {
                     jung = HangulProcessor.getJungsung(prev, curr);
                     char c = HangulProcessor.synthesizeHangulCharacter(cho, jung, 0);
@@ -181,12 +228,16 @@ public abstract class SelectionManagerMixin {
                     KeyboardLayout.INSTANCE.assemblePosition = this.selectionEnd;
                     return true;
                 }
+
+                // 종성 추가
                 if (jong == 0 && HangulProcessor.isJongsung(curr)) {
                     char c = HangulProcessor.synthesizeHangulCharacter(cho, jung, HangulProcessor.getJongsung(curr));
                     this.modifyText(c);
                     KeyboardLayout.INSTANCE.assemblePosition = this.selectionEnd;
                     return true;
                 }
+
+                // 종성 받침 추가
                 if (jong != 0 && HangulProcessor.isJongsung(prev, curr)) {
                     jong = HangulProcessor.getJongsung(prev, curr);
                     char c = HangulProcessor.synthesizeHangulCharacter(cho, jung, jong);
@@ -194,25 +245,24 @@ public abstract class SelectionManagerMixin {
                     KeyboardLayout.INSTANCE.assemblePosition = this.selectionEnd;
                     return true;
                 }
+
+                // 종성에서 받침 하나 빼고 글자 만들기
                 if (jong != 0 && HangulProcessor.isJungsung(curr)) {
-                    int newCho;
                     char[] tbl = KeyboardLayout.INSTANCE.jongsung_ref_table.get(jong).toCharArray();
+                    int newCho = 0;
                     if (tbl.length == 2) {
-                        Objects.requireNonNull(KeyboardLayout.INSTANCE);
-                        newCho = "\u3131\u3132\u3134\u3137\u3138\u3139\u3141\u3142\u3143\u3145\u3146\u3147\u3148\u3149\u314a\u314b\u314c\u314d\u314e".indexOf(tbl[1]);
-                        Objects.requireNonNull(KeyboardLayout.INSTANCE);
-                        jong = "\u0000\u3131\u3132\u3133\u3134\u3135\u3136\u3137\u3139\u313a\u313b\u313c\u313d\u313e\u313f\u3140\u3141\u3142\u3144\u3145\u3146\u3147\u3148\u314a\u314b\u314c\u314d\u314e".indexOf(tbl[0]);
+                        newCho = KeyboardLayout.INSTANCE.chosung_table.indexOf(tbl[1]);
+                        jong = KeyboardLayout.INSTANCE.jongsung_table.indexOf(tbl[0]);
                     } else {
-                        Objects.requireNonNull(KeyboardLayout.INSTANCE);
-                        Objects.requireNonNull(KeyboardLayout.INSTANCE);
-                        newCho = "\u3131\u3132\u3134\u3137\u3138\u3139\u3141\u3142\u3143\u3145\u3146\u3147\u3148\u3149\u314a\u314b\u314c\u314d\u314e".indexOf("\u0000\u3131\u3132\u3133\u3134\u3135\u3136\u3137\u3139\u313a\u313b\u313c\u313d\u313e\u313f\u3140\u3141\u3142\u3144\u3145\u3146\u3147\u3148\u314a\u314b\u314c\u314d\u314e".charAt(jong));
+                        newCho = KeyboardLayout.INSTANCE.chosung_table.indexOf(KeyboardLayout.INSTANCE.jongsung_table.charAt(jong));
                         jong = 0;
                     }
+
                     char c = HangulProcessor.synthesizeHangulCharacter(cho, jung, jong);
                     this.modifyText(c);
+
                     cho = newCho;
-                    Objects.requireNonNull(KeyboardLayout.INSTANCE);
-                    jung = "\u314f\u3150\u3151\u3152\u3153\u3154\u3155\u3156\u3157\u3158\u3159\u315a\u315b\u315c\u315d\u315e\u315f\u3160\u3161\u3162\u3163".indexOf(curr);
+                    jung = KeyboardLayout.INSTANCE.jungsung_table.indexOf(curr);
                     code = HangulProcessor.synthesizeHangulCharacter(cho, jung, 0);
                     this.writeText(String.valueOf(Character.toChars(code)));
                     KeyboardLayout.INSTANCE.assemblePosition = this.selectionEnd;
@@ -220,6 +270,7 @@ public abstract class SelectionManagerMixin {
                 }
             }
         }
+
         this.writeText(String.valueOf(curr));
         KeyboardLayout.INSTANCE.assemblePosition = this.selectionEnd;
         return true;
