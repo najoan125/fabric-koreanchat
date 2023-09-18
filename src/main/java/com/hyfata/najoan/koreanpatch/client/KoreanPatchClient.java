@@ -22,8 +22,8 @@ implements ClientModInitializer {
             Imm32.INSTANCE.ImmDisableIME(-1);
             KEYCODE = GLFW.GLFW_KEY_RIGHT_ALT;
         }
-        else if (Platform.isMac()) {
-            KEYCODE = GLFW.GLFW_KEY_RIGHT_ALT;
+        else {
+            KEYCODE = GLFW.GLFW_KEY_LEFT_CONTROL;
         }
 
 

@@ -93,6 +93,11 @@ public abstract class SelectionManagerMixin {
                 KeyboardLayout.INSTANCE.assemblePosition = HangulProcessor.isHangulCharacter(chr) ? this.selectionEnd : -1;
                 continue;
             }
+            if (chr == '\n') {
+                this.writeText(String.valueOf(chr));
+                KeyboardLayout.INSTANCE.assemblePosition = HangulProcessor.isHangulCharacter(chr) ? this.selectionEnd : -1;
+                continue;
+            }
             int qwertyIndex = KeyboardLayout.INSTANCE.getQwertyIndexCodePoint(chr);
             if (qwertyIndex == -1) {
                 KeyboardLayout.INSTANCE.assemblePosition = -1;
