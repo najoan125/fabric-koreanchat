@@ -16,6 +16,7 @@ import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -36,6 +37,7 @@ public abstract class SelectionManagerMixin {
     @Shadow
     @Final
     private Consumer<String> stringSetter;
+    @Unique
     private final MinecraftClient client = MinecraftClient.getInstance();
 
     @Inject(at={@At(value="HEAD")}, method={"insert(C)Z"}, cancellable=true)
@@ -143,6 +145,7 @@ public abstract class SelectionManagerMixin {
     }
 
 
+    @Unique
     boolean onBackspaceKeyPressed() {
         int cursorPosition = this.selectionEnd;
         if (cursorPosition == 0 || cursorPosition != KeyboardLayout.INSTANCE.assemblePosition) return false;
@@ -187,6 +190,7 @@ public abstract class SelectionManagerMixin {
         return false;
     }
 
+    @Unique
     private int getModifiers() {
         boolean shift = InputUtil.isKeyPressed(client.getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) ||
                 InputUtil.isKeyPressed(client.getWindow().getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT);
@@ -196,10 +200,12 @@ public abstract class SelectionManagerMixin {
         return 0;
     }
 
+    @Unique
     public String getText() {
         return this.stringGetter.get();
     }
 
+    @Unique
     public void writeText(String str) {
         int cursorPosition = this.selectionEnd;
         String s = this.getText();
@@ -211,6 +217,7 @@ public abstract class SelectionManagerMixin {
         }
     }
 
+    @Unique
     public boolean setText(String str) {
         if (this.stringFilter.test(str)) {
             this.stringSetter.accept(str);
@@ -219,6 +226,7 @@ public abstract class SelectionManagerMixin {
         return false;
     }
 
+    @Unique
     public void modifyText(char ch) {
         int cursorPosition = this.selectionEnd;
         char[] arr = this.getText().toCharArray();
@@ -228,6 +236,7 @@ public abstract class SelectionManagerMixin {
         }
     }
 
+    @Unique
     boolean onHangulCharTyped(int keyCode, int modifiers) {
         boolean shift = (modifiers & 0x01) == 1;
 

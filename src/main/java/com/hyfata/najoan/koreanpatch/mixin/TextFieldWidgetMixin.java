@@ -12,6 +12,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -22,6 +23,7 @@ import java.util.function.Consumer;
 public abstract class TextFieldWidgetMixin {
     @Shadow
     private Consumer<String> changedListener;
+    @Unique
     private final MinecraftClient client = MinecraftClient.getInstance();
 
     @Shadow
@@ -43,11 +45,12 @@ public abstract class TextFieldWidgetMixin {
     protected abstract boolean isEditable();
 
     @Shadow
-    public abstract void onChanged(String var1);
+    protected abstract void onChanged(String var1);
 
     @Shadow
     public abstract void setText(String var1);
 
+    @Unique
     public void writeText(String str) {
         this.write(str);
         this.sendTextChanged(str);
@@ -55,12 +58,14 @@ public abstract class TextFieldWidgetMixin {
         this.updateScreen();
     }
 
+    @Unique
     private void sendTextChanged(String str) {
         if (this.changedListener != null) {
             this.changedListener.accept(str);
         }
     }
 
+    @Unique
     private void updateScreen() {
         if (this.client.currentScreen == null) {
             return;
@@ -70,6 +75,7 @@ public abstract class TextFieldWidgetMixin {
         }
     }
 
+    @Unique
     public void modifyText(char ch) {
         int cursorPosition = this.getCursor();
         this.setCursor(cursorPosition - 1, false);
@@ -77,6 +83,7 @@ public abstract class TextFieldWidgetMixin {
         this.writeText(String.valueOf(Character.toChars(ch)));
     }
 
+    @Unique
     boolean onBackspaceKeyPressed() {
         int cursorPosition = this.getCursor();
         if (cursorPosition == 0 || cursorPosition != KeyboardLayout.INSTANCE.assemblePosition) return false;
@@ -121,6 +128,7 @@ public abstract class TextFieldWidgetMixin {
         return false;
     }
 
+    @Unique
     boolean onHangulCharTyped(int keyCode, int modifiers) {
         boolean shift = (modifiers & 0x01) == 1;
 
@@ -229,6 +237,7 @@ public abstract class TextFieldWidgetMixin {
         return true;
     }
 
+    @Unique
     public void typedTextField(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         int qwertyIndex = KeyboardLayout.INSTANCE.getQwertyIndexCodePoint(chr);
         if (qwertyIndex == -1) {

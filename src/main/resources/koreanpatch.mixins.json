@@ -16,6 +16,7 @@
     "CreativeInventoryScreenMixin",
     "DirectConnectScreenMixin",
     "EditWorldScreenMixin",
+    "GridScreenTabMixin",
     "SelectionManagerMixin",
     "SelectWorldScreenMixin",
     "SignEditScreenMixin",
