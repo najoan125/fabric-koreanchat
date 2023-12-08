@@ -29,7 +29,7 @@ public class CreateWorldScreenMixin extends Screen {
     @Inject(at = {@At(value="RETURN")}, method = {"render"})
     private void addCustomLabel(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci){
         if (KoreanPatchClient.currentIndex == 0) {
-            int gridHeight = 145; //GridScreenTabMixin.java
+            int gridHeight = 117; //GridScreenTabMixin.java
 
             // from GameTab class in CreateWorldScreen
             int width = 208;
