@@ -43,10 +43,10 @@ public class RenderUtil {
         }
 
         VertexConsumer vertexConsumer = context.getVertexConsumers().getBuffer(RenderLayer.getGui());
-        vertexConsumer.vertex(matrix, x1, y1, 0f).color(color);
-        vertexConsumer.vertex(matrix, x1, y2, 0f).color(color);
-        vertexConsumer.vertex(matrix, x2, y2, 0f).color(color);
-        vertexConsumer.vertex(matrix, x2, y1, 0f).color(color);
+        vertexConsumer.vertex(matrix, x1, y1, 0f).color(color).next();
+        vertexConsumer.vertex(matrix, x1, y2, 0f).color(color).next();
+        vertexConsumer.vertex(matrix, x2, y2, 0f).color(color).next();
+        vertexConsumer.vertex(matrix, x2, y1, 0f).color(color).next();
         context.draw();
     }
 }
