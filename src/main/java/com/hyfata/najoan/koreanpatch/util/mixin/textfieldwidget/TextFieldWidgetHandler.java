@@ -47,7 +47,7 @@ public class TextFieldWidgetHandler implements IMixinCommon {
 
     public void modifyText(char ch) {
         int cursorPosition = accessor.getCursor();
-        accessor.setCursor(cursorPosition - 1, false);
+        accessor.setCursor(cursorPosition - 1);
         accessor.eraseCharacters(1);
         this.writeText(String.valueOf(Character.toChars(ch)));
     }

@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 public interface ITextFieldWidgetAccessor {
     Consumer<String> fabric_koreanchat$getChangedListener();
     int getCursor();
-    void setCursor(int var1, boolean shift);
+    void setCursor(int var1);
     void eraseCharacters(int var1);
     String getText();
     void write(String var1);

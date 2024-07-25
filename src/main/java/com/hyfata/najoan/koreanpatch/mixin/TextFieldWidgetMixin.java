@@ -27,7 +27,7 @@ public abstract class TextFieldWidgetMixin implements ITextFieldWidgetAccessor {
     public abstract int getCursor();
 
     @Shadow
-    public abstract void setCursor(int var1, boolean shift);
+    public abstract void setCursor(int var1);
 
     @Shadow
     public abstract void eraseCharacters(int var1);
