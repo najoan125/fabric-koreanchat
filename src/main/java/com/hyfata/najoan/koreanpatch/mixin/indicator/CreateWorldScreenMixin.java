@@ -6,12 +6,12 @@ import com.hyfata.najoan.koreanpatch.mixin.accessor.TabNavigationWidgetInvoker;
 import com.hyfata.najoan.koreanpatch.util.animation.AnimationUtil;
 import com.hyfata.najoan.koreanpatch.util.Indicator;
 import com.hyfata.najoan.koreanpatch.util.TextFieldWidgetUtil;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.client.gui.tab.Tab;
 import net.minecraft.client.gui.widget.TabNavigationWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,7 +33,7 @@ public class CreateWorldScreenMixin extends Screen {
     AnimationUtil animationUtil = new AnimationUtil();
 
     @Inject(at = {@At(value = "RETURN")}, method = {"render"})
-    private void addCustomLabel(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void addCustomLabel(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         TabNavigationWidgetInvoker tabInvoker = (TabNavigationWidgetInvoker) tabNavigation;
         Tab currentTab = tabInvoker.getTabs().get(tabInvoker.currentTabIndex());
 
@@ -49,7 +49,7 @@ public class CreateWorldScreenMixin extends Screen {
             animationUtil.init(x - 4, 0);
             animationUtil.calculateAnimation(x, 0);
 
-            Indicator.showIndicator(context, animationUtil.getResultX(), y);
+            Indicator.showIndicator(matrices, animationUtil.getResultX(), y);
         } else {
             KoreanPatchClient.bypassInjection = true;
         }

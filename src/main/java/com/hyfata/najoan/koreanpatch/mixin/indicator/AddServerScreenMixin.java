@@ -3,10 +3,10 @@ package com.hyfata.najoan.koreanpatch.mixin.indicator;
 import com.hyfata.najoan.koreanpatch.util.animation.AnimationUtil;
 import com.hyfata.najoan.koreanpatch.util.Indicator;
 import com.hyfata.najoan.koreanpatch.util.TextFieldWidgetUtil;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.AddServerScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -40,7 +40,7 @@ public class AddServerScreenMixin extends Screen {
     private final AnimationUtil animationUtil = new AnimationUtil();
 
     @Inject(at = {@At(value = "TAIL")}, method = {"render"})
-    private void addCustomLabel(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void addCustomLabel(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         float x;
         float y;
         int textX = this.width / 2 - 100 + 1;
@@ -58,7 +58,7 @@ public class AddServerScreenMixin extends Screen {
         animationUtil.init(x - 4, 0);
         animationUtil.calculateAnimation(x, 0);
 
-        context.getMatrices().translate(0.0F, 0.0F, 200.0F);
-        Indicator.showIndicator(context, animationUtil.getResultX() + 4, y);
+        matrices.translate(0.0F, 0.0F, 200.0F);
+        Indicator.showIndicator(matrices, animationUtil.getResultX() + 4, y);
     }
 }

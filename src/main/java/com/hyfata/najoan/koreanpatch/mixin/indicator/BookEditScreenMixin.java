@@ -3,9 +3,9 @@ package com.hyfata.najoan.koreanpatch.mixin.indicator;
 import com.hyfata.najoan.koreanpatch.mixin.accessor.BookEditScreenPageContentAccessor;
 import com.hyfata.najoan.koreanpatch.util.animation.AnimationUtil;
 import com.hyfata.najoan.koreanpatch.util.Indicator;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.BookEditScreen;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,7 +31,7 @@ public abstract class BookEditScreenMixin extends Screen {
     AnimationUtil animationUtil = new AnimationUtil();
 
     @Inject(at = {@At(value = "RETURN")}, method = {"render"})
-    private void addCustomLabel(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void addCustomLabel(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         float x = (this.width - 192) / 2f; // int i = (this.width - 192) / 2; in render() method
         float y;
         if (signing) {
@@ -44,7 +44,7 @@ public abstract class BookEditScreenMixin extends Screen {
         animationUtil.init(0, y - 4);
         animationUtil.calculateAnimation(0, y);
 
-        Indicator.showCenteredIndicator(context, x + 10, animationUtil.getResultY());
+        Indicator.showCenteredIndicator(matrices, x + 10, animationUtil.getResultY());
     }
 }
 
