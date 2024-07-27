@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -33,7 +34,7 @@ public class CreateWorldScreenMixin extends Screen {
     private void addCustomLabel(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (!moreOptionsOpen) {
             KoreanPatchClient.bypassInjection = false;
-            Text text = Text.translatable("selectWorld.enterName");
+            Text text = new TranslatableText("selectWorld.enterName");
 
             float x = TextFieldWidgetUtil.getCursorXWithText(levelNameField, text, levelNameField.x) + 4;
             float y = TextFieldWidgetUtil.calculateIndicatorY(levelNameField);

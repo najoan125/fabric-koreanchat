@@ -2,8 +2,10 @@ package com.hyfata.najoan.koreanpatch.util.language;
 
 import com.hyfata.najoan.koreanpatch.client.KoreanPatchClient;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 
 public class LanguageUtil {
     public static final int EN = 0;
@@ -11,8 +13,8 @@ public class LanguageUtil {
     private static int currentType = EN;
 
     static MinecraftClient client = MinecraftClient.getInstance();
-    static Text KO_TEXT = Text.translatable("koreanpatch.langtype.korean");
-    static Text EN_TEXT = Text.translatable("koreanpatch.langtype.english");
+    static Text KO_TEXT = new TranslatableText("koreanpatch.langtype.korean");
+    static Text EN_TEXT = new TranslatableText("koreanpatch.langtype.english");
 
     public static int getCurrentType() {
         return currentType;
@@ -36,7 +38,7 @@ public class LanguageUtil {
     
     public static OrderedText getCurrentText() {
         if (KoreanPatchClient.IME) {
-            return Text.literal("IME").asOrderedText();
+            return new LiteralText("IME").asOrderedText();
         }
         return switch (currentType) {
             case EN -> EN_TEXT.asOrderedText();

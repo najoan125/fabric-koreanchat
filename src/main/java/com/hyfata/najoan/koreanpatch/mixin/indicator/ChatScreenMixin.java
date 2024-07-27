@@ -5,8 +5,8 @@ import com.hyfata.najoan.koreanpatch.util.animation.AnimationUtil;
 import com.hyfata.najoan.koreanpatch.util.Indicator;
 import com.hyfata.najoan.koreanpatch.util.TextFieldWidgetUtil;
 import com.mojang.brigadier.suggestion.Suggestions;
-import net.minecraft.client.gui.screen.ChatInputSuggestor;
 import net.minecraft.client.gui.screen.ChatScreen;
+import net.minecraft.client.gui.screen.CommandSuggestor;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -28,7 +28,7 @@ public abstract class ChatScreenMixin extends Screen {
     protected TextFieldWidget chatField;
 
     @Shadow
-    ChatInputSuggestor chatInputSuggestor;
+    CommandSuggestor commandSuggestor;
 
     @Unique
     private final AnimationUtil animationUtil = new AnimationUtil();
@@ -36,7 +36,7 @@ public abstract class ChatScreenMixin extends Screen {
 
     @Inject(at = {@At(value = "TAIL")}, method = {"render"})
     private void addCustomLabel(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        ChatInputSuggestorAccessor accessor = (ChatInputSuggestorAccessor) chatInputSuggestor;
+        ChatInputSuggestorAccessor accessor = (ChatInputSuggestorAccessor) commandSuggestor;
         int suggestorHeight = 0;
         int messagesY = 0;
         // chatSuggestor
