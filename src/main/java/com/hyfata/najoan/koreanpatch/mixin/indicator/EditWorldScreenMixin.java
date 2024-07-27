@@ -31,7 +31,7 @@ public class EditWorldScreenMixin extends Screen {
 
     @Inject(at = {@At(value = "TAIL")}, method = {"render"})
     public void addCustomLabel(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        float x = TextFieldWidgetUtil.getCursorXWithText(levelNameTextField, ENTER_NAME_TEXT, levelNameTextField.getX()) + 4;
+        float x = TextFieldWidgetUtil.getCursorXWithText(levelNameTextField, ENTER_NAME_TEXT, levelNameTextField.x) + 4;
         float y = TextFieldWidgetUtil.calculateIndicatorY(levelNameTextField);
 
         animationUtil.init(x - 4, 0);

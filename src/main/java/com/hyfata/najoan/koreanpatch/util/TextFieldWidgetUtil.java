@@ -13,14 +13,14 @@ public class TextFieldWidgetUtil {
         int firstCharacterIndex = accessor.getFirstCharacterIndex();
         int selectionStart = accessor.getSelectionStart();
 
-        float cursorX = textField.getX() + client.textRenderer.getTextHandler().getWidth(textField.getText().substring(firstCharacterIndex, selectionStart));
-        float endX = textField.getX() + textField.getWidth() - 1.2f * Indicator.getIndicatorWidth();
+        float cursorX = textField.x + client.textRenderer.getTextHandler().getWidth(textField.getText().substring(firstCharacterIndex, selectionStart));
+        float endX = textField.x + textField.getWidth() - 1.2f * Indicator.getIndicatorWidth();
 
         return Math.min(cursorX, endX);
     }
 
     public static float calculateIndicatorY(TextFieldWidget textField) {
-        return textField.getY() - Indicator.getIndicatorHeight() / 1.5f;
+        return textField.y - Indicator.getIndicatorHeight() / 1.5f;
     }
 
     public static float getCursorXWithText(TextFieldWidget textField, Text text, int x) {

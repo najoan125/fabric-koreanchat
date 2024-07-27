@@ -24,8 +24,8 @@ public class AnvilScreenMixin extends Screen {
 
     @Inject(at = {@At(value = "TAIL")}, method = {"renderForeground"})
     private void customLabel(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        float x = nameField.getX() + nameField.getWidth() - Indicator.getIndicatorWidth();
-        float y = nameField.getY() - Indicator.getIndicatorHeight() - 6;
+        float x = nameField.x + nameField.getWidth() - Indicator.getIndicatorWidth();
+        float y = nameField.y - Indicator.getIndicatorHeight() - 6;
 
         Indicator.showIndicator(matrices, x, y);
     }

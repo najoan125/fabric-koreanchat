@@ -6,7 +6,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
-import org.joml.Matrix4f;
+import net.minecraft.util.math.Matrix4f;
 
 public class RenderUtil {
     static MinecraftClient client = MinecraftClient.getInstance();
@@ -41,13 +41,16 @@ public class RenderUtil {
 
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
         RenderSystem.enableBlend();
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        RenderSystem.disableTexture();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         bufferBuilder.vertex(matrix, x1, y1, 0f).color(color).next();
         bufferBuilder.vertex(matrix, x1, y2, 0f).color(color).next();
         bufferBuilder.vertex(matrix, x2, y2, 0f).color(color).next();
         bufferBuilder.vertex(matrix, x2, y1, 0f).color(color).next();
-        BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
+        BufferRenderer.drawWithShader(bufferBuilder.end());
+        RenderSystem.enableTexture();
         RenderSystem.disableBlend();
     }
 }

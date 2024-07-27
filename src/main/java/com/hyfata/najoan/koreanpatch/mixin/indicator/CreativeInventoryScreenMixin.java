@@ -28,8 +28,8 @@ public class CreativeInventoryScreenMixin extends Screen {
     @Inject(method = {"render"}, at = @At(value = "TAIL", shift = At.Shift.BY, by = -3))
     private void addCustomLabel(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (search) {
-            int x = searchBox.getX() + searchBox.getWidth() + 19;
-            int y = searchBox.getY() + searchBox.getHeight() / 2;
+            int x = searchBox.x + searchBox.getWidth() + 19;
+            int y = searchBox.y + searchBox.getHeight() / 2;
 
             Indicator.showCenteredIndicator(matrices, x, y);
         }
@@ -37,6 +37,6 @@ public class CreativeInventoryScreenMixin extends Screen {
 
     @Inject(at = {@At(value = "HEAD")}, method = {"setSelectedTab"})
     private void check(ItemGroup group, CallbackInfo callbackInfo) {
-        search = group.getType() == ItemGroup.Type.SEARCH;
+        search = group == ItemGroup.SEARCH;
     }
 }

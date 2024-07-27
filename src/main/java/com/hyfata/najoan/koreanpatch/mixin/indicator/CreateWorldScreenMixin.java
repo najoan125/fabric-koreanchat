@@ -35,7 +35,7 @@ public class CreateWorldScreenMixin extends Screen {
             KoreanPatchClient.bypassInjection = false;
             Text text = Text.translatable("selectWorld.enterName");
 
-            float x = TextFieldWidgetUtil.getCursorXWithText(levelNameField, text, levelNameField.getX()) + 4;
+            float x = TextFieldWidgetUtil.getCursorXWithText(levelNameField, text, levelNameField.x) + 4;
             float y = TextFieldWidgetUtil.calculateIndicatorY(levelNameField);
 
             animationUtil.init(x - 4, 0);
