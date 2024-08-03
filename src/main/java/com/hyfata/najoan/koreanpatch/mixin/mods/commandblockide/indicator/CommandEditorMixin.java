@@ -5,8 +5,8 @@ import arm32x.minecraft.commandblockide.client.gui.editor.CommandEditor;
 import com.hyfata.najoan.koreanpatch.util.Indicator;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -41,7 +41,7 @@ public abstract class CommandEditorMixin {
     }
 
     @Inject(at = @At(value = "HEAD"), method = "render")
-    public void renderHead(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    public void renderHead(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (this.orgX != 0)
             commandField.setX((int) (this.orgX + Indicator.getIndicatorWidth() + margin));
         if (this.width != 0 && MinecraftClient.getInstance().currentScreen != null) {
@@ -51,10 +51,10 @@ public abstract class CommandEditorMixin {
         }
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Larm32x/minecraft/commandblockide/client/gui/Container;render(Lnet/minecraft/client/gui/DrawContext;IIF)V", shift = At.Shift.BEFORE), method = "render")
-    public void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(at = @At(value = "INVOKE", target = "Larm32x/minecraft/commandblockide/client/gui/Container;render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V", shift = At.Shift.BEFORE), method = "render")
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (commandField.isFocused() && this.orgX != 0) {
-            Indicator.showIndicator(context, (float) this.orgX, (float) (y - Indicator.getIndicatorHeight() / 2 + 7.5));
+            Indicator.showIndicator(matrices, (float) this.orgX, (float) (y - Indicator.getIndicatorHeight() / 2 + 7.5));
         }
     }
 }
