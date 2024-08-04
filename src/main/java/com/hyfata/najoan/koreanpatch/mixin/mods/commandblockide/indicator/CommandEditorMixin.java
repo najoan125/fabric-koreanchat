@@ -1,11 +1,11 @@
 package com.hyfata.najoan.koreanpatch.mixin.mods.commandblockide.indicator;
 
-import arm32x.minecraft.commandblockide.client.gui.MultilineTextFieldWidget;
 import arm32x.minecraft.commandblockide.client.gui.editor.CommandEditor;
 import com.hyfata.najoan.koreanpatch.util.Indicator;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class CommandEditorMixin {
     @Shadow(remap = false)
     @Final
-    protected MultilineTextFieldWidget commandField;
+    protected TextFieldWidget commandField;
 
     @Shadow(remap = false)
     private int y;
