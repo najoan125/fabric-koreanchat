@@ -1,1 +1,1 @@
-- backport 1.19.2
+- Command Block IDE, Mod Menu와 호환되지 않는 버그 수정
