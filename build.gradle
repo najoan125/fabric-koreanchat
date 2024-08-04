@@ -56,8 +56,8 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modCompileOnly files('libs/command-block-ide.jar')
-	modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}")
+	modImplementation files('libs/command-block-ide.jar')
+	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 }
 
 processResources {
