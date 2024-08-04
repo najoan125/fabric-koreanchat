@@ -1,2 +1,1 @@
-- Command Block IDE 지원(별도로 호환되는 버전의 모드를 적용할 필요가 없습니다!)
-- Mod Menu에 한/영 인디케이터 추가
+- Command Block IDE, Mod Menu와 호환되지 않는 버그 수정

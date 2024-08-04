@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = CommandBlockEditor.class, remap = false)
+@Mixin(CommandBlockEditor.class)
 public abstract class CommandBlockEditorMixin extends CommandEditor {
     @Shadow
     @Final

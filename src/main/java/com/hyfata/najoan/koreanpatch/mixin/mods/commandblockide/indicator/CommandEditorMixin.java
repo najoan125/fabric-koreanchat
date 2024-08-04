@@ -15,13 +15,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = CommandEditor.class, remap = false)
+@Mixin(CommandEditor.class)
 public abstract class CommandEditorMixin {
-    @Shadow
+    @Shadow(remap = false)
     @Final
     protected MultilineTextFieldWidget commandField;
 
-    @Shadow
+    @Shadow(remap = false)
     private int y;
 
     @Unique
