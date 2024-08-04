@@ -35,9 +35,9 @@ public abstract class CommandEditorMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void init(Screen screen, TextRenderer textRenderer, int x, int y, int width, int height, int leftPadding, int rightPadding, int index, CallbackInfo ci) {
-        this.orgX = x + leftPadding + 20;
+        this.orgX = x + leftPadding + 20 + 1;
         this.width = width - screen.width;
-        this.fieldWidth = - leftPadding - rightPadding - 20;
+        this.fieldWidth = - leftPadding - rightPadding - 20 - 2;
     }
 
     @Inject(at = @At(value = "HEAD"), method = "render")
