@@ -24,6 +24,11 @@
     "indicator.EditWorldScreenMixin",
     "indicator.SelectWorldScreenMixin",
     "indicator.SignEditScreenMixin",
+    "mods.bettercommand.AbstractBetterCommandBlockScreenMixin",
+    "mods.bettercommand.MultiLineTextFieldWidgetMixin",
+    "mods.commandblockide.MultilineTextFieldWidgetMixin",
+    "mods.commandblockide.indicator.CommandBlockEditorMixin",
+    "mods.commandblockide.indicator.CommandEditorMixin",
     "mods.modmenu.ModMenuScreenMixin"
   ],
   "injectors": {
