@@ -39,7 +39,7 @@ public abstract class TextFieldWidgetMixin implements ITextFieldWidgetAccessor {
     public abstract void write(String var1);
 
     @Shadow
-    protected abstract boolean isEditable();
+    public abstract boolean isEditable();
 
     @Shadow
     protected abstract void onChanged(String var1);
