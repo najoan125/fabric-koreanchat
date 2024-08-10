@@ -2,3 +2,4 @@ accessWidener v1 named
 accessible class net/minecraft/client/gui/screen/ingame/BookEditScreen$PageContent
 accessible class net/minecraft/client/gui/screen/ingame/BookEditScreen$Position
 accessible class net/minecraft/client/gui/screen/world/CreateWorldScreen$GameTab
+accessible method net/minecraft/client/gui/widget/TextFieldWidget isEditable ()Z
