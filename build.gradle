@@ -12,6 +12,8 @@ version = project.mod_version
 group = project.maven_group
 
 modrinth {
+	def minecraftVersionsString = project.findProperty('support_version') ?: ''
+	def minecraftVersions = minecraftVersionsString.split(',')
 	token = System.getenv("MODRINTH_TOKEN")
 	changelog = rootProject.file("changelog.txt").text
 	projectId = "qyulnpBL"
@@ -19,7 +21,7 @@ modrinth {
 	versionName = "Korean Chat Patch " + project.mod_version
 	versionType = "release"
 	uploadFile = remapJar
-	gameVersions = ["${project.minecraft_version}"]
+	gameVersions = minecraftVersions.collect { it.trim() }
 	loaders = ["fabric"]
 	dependencies {
 		required.project "fabric-api"
@@ -42,6 +44,18 @@ repositories {
 		name = "Terraformers"
 		url = "https://maven.terraformersmc.com/"
 	}
+
+	exclusiveContent {
+		forRepository {
+			maven {
+				name = "Modrinth"
+				url = "https://api.modrinth.com/maven"
+			}
+		}
+		filter {
+			includeGroup "maven.modrinth"
+		}
+	}
 }
 
 fabricApi {
@@ -56,8 +70,9 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modImplementation files('libs/command-block-ide.jar')
-	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+	modCompileOnly "maven.modrinth:command-block-ide:${project.command_block_ide_version}"
+	modImplementation "maven.modrinth:bettercommandblockui:${project.better_command_block_ui_version}"
 }
 
 processResources {
